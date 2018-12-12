@@ -29,19 +29,42 @@ bot = ChatBot(
 
 
 #for files in os.listdir('data/english/'):
-#	data = open('data/english/' + files, 'r').readlines()
-#	bot.train(data)
+#   data = open('data/english/' + files, 'r').readlines()
+#   bot.train(data)
 
 for file in os.listdir('data/sopd/'):
     data = open('data/sopd/' + file, 'r').readlines()
     bot.train(data)
 
+for file in os.listdir('data/bill/'):
+    data = open('data/bill/' + file, 'r').readlines()
+    bot.train(data)
 
 def command():
-    global answer
-    user_input = input.get()
+    global answer    
+    user_input, hkid = preprocess(input.get())
+    #print(user_input)
+    #print(hkid)
     response = bot.get_response(user_input)
-    answer['text']=str(response.text)
+    response_text = postprocess(response.text, hkid)
+    answer['text']=str(response_text)
+
+def preprocess(raw_input):
+    new_input = raw_input
+    hkid = ""
+    if raw_input.find("My ID Number is") != -1:    
+        new_input = "CHECK BILL"
+        hkid = raw_input[16:]
+    return new_input, hkid
+
+def postprocess(response_text, hkid):
+    new_response_text = response_text
+    if(response_text == 'QUERY BILL'):
+        new_response_text = hkid+', You Outstanding bill amount is $100'
+    return new_response_text
+
+
+
 
 
 screen = Tk()
@@ -55,8 +78,6 @@ title.pack()
 
 input = Entry(screen,textvariable=menu)
 input.pack()
-
-
 
 bottone = Button(screen,text='Talk to Me!',command=command)
 bottone.pack()
