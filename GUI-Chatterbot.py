@@ -28,6 +28,8 @@ bot = ChatBot(
 )
 
 
+current_action = ""
+
 #for files in os.listdir('data/english/'):
 #   data = open('data/english/' + files, 'r').readlines()
 #   bot.train(data)
@@ -45,22 +47,33 @@ def command():
     user_input, hkid = preprocess(input.get())
     #print(user_input)
     #print(hkid)
+    print(current_action)
     response = bot.get_response(user_input)
     response_text = postprocess(response.text, hkid)
     answer['text']=str(response_text)
 
 def preprocess(raw_input):
+    global current_action
     new_input = raw_input
     hkid = ""
-    if raw_input.find("My ID Number is") != -1:    
-        new_input = "CHECK BILL"
+    if raw_input.find("My ID Number is") != -1:
+        new_input = "CHECK"
         hkid = raw_input[16:]
+    if raw_input.find("appointment today") != -1:
+    	current_action = "SOPD"
+    elif raw_input.find("appointment") != -1:
+    	current_action = "APPOINTMENT"
+    elif raw_input.find("bill") != -1:
+    	current_action = "BILL"
     return new_input, hkid
 
 def postprocess(response_text, hkid):
     new_response_text = response_text
-    if(response_text == 'QUERY BILL'):
-        new_response_text = hkid+', You Outstanding bill amount is $100'
+    if(response_text == 'QUERY'):
+    	if(current_action=='BILL'):
+    		new_response_text = hkid+', Your Outstanding bill amount is $100'
+    	elif(current_action=='APPOINTMENT'):
+    		new_response_text = 'You have an appointment at 9am at 18th Dec'
     return new_response_text
 
 
