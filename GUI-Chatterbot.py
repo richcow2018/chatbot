@@ -4,7 +4,37 @@ import time
 import os
 from chatterbot.trainers import ListTrainer
 
+bookingpatient = [
+   [
+    "0001",                 # ID
+    "Chan Tai Man",         # Name
+    "A123456(3)",           # HKID
+    "2018/12/25 09:00:00",    # BookingDate
+    "Dr. Ng Mei Lai"         # Doctor
+   ],
+   [
+    "0002",                 # ID
+    "Sheung Kin Hong",      # Name
+    "A654321(7)",           # HKID
+    "2018/12/25 13:00:00",    # BookingDate
+    "Dr. Ng Mei Lai"          # Doctor
+    ]
+]
 
+billingpatient = [
+   [
+    "0001",                 # ID
+    "Chan Tai Man",         # Name
+    "A123456(3)",           # HKID
+    5000    # Outstanding Fee
+   ],
+   [
+    "0002",  # ID
+    "Sheung Kin Hong",  # Name
+    "A654321(7)",  # HKID
+    100  # Outstanding Fee
+    ]
+]
 
 bot = ChatBot(
 "Chatter Bot",
@@ -71,9 +101,13 @@ def postprocess(response_text, hkid):
     new_response_text = response_text
     if(response_text == 'QUERY'):
     	if(current_action=='BILL'):
-    		new_response_text = hkid+', Your Outstanding bill amount is $100'
+            for i in range(len(billingpatient)):
+                    if hkid in billingpatient[i][2]:
+                        new_response_text = 'Hello, ' + billingpatient[i][1] + ', your outstanding bill : ' + str(billingpatient[i][3])
     	elif(current_action=='APPOINTMENT'):
-    		new_response_text = 'You have an appointment at 9am at 18th Dec'
+            for i in range(len(bookingpatient)):
+                if hkid in bookingpatient[i][2]:
+                    new_response_text = 'Hello, ' + bookingpatient[i][1] + ', your booking date is on ' + str(bookingpatient[i][3])
     return new_response_text
 
 
