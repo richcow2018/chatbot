@@ -2,39 +2,18 @@ from chatterbot import ChatBot
 from tkinter import *
 import time
 import os
+import csv
 from chatterbot.trainers import ListTrainer
+from pprint import pprint
 
-bookingpatient = [
-   [
-    "0001",                 # ID
-    "Chan Tai Man",         # Name
-    "A123456(3)",           # HKID
-    "2018/12/25 09:00:00",    # BookingDate
-    "Dr. Ng Mei Lai"         # Doctor
-   ],
-   [
-    "0002",                 # ID
-    "Sheung Kin Hong",      # Name
-    "A654321(7)",           # HKID
-    "2018/12/25 13:00:00",    # BookingDate
-    "Dr. Ng Mei Lai"          # Doctor
-    ]
-]
+#Simulate Database record
+with open('data/db_billing.csv', newline='') as csvfile_billing:
+    reader = csv.reader(csvfile_billing, delimiter=',')
+    billingpatient = list(map(tuple, reader))
 
-billingpatient = [
-   [
-    "0001",                 # ID
-    "Chan Tai Man",         # Name
-    "A123456(3)",           # HKID
-    5000    # Outstanding Fee
-   ],
-   [
-    "0002",  # ID
-    "Sheung Kin Hong",  # Name
-    "A654321(7)",  # HKID
-    100  # Outstanding Fee
-    ]
-]
+with open('data/db_booking.csv', newline='') as csvfile_booking:
+    reader = csv.reader(csvfile_booking, delimiter=',')
+    bookingpatient = list(map(tuple, reader))
 
 bot = ChatBot(
 "Chatter Bot",
@@ -51,7 +30,7 @@ bot = ChatBot(
         {
             'import_path': 'chatterbot.logic.LowConfidenceAdapter',
             'threshold': 0.6,
-            'default_response': 'Sorry, I do not undetstand.'
+            'default_response': 'Sorry, I do not understand.'
         }
     ],
     trainer='chatterbot.trainers.ListTrainer'
@@ -86,6 +65,7 @@ def preprocess(raw_input):
     global current_action
     new_input = raw_input
     hkid = ""
+
     if raw_input.find("My ID Number is") != -1:
         new_input = "CHECK"
         hkid = raw_input[16:]
@@ -107,12 +87,8 @@ def postprocess(response_text, hkid):
     	elif(current_action=='APPOINTMENT'):
             for i in range(len(bookingpatient)):
                 if hkid in bookingpatient[i][2]:
-                    new_response_text = 'Hello, ' + bookingpatient[i][1] + ', your booking date is on ' + str(bookingpatient[i][3])
+                    new_response_text = 'Hello, ' + bookingpatient[i][1] + ', your booking date is on ' + str(bookingpatient[i][3]) + ' at ' + str(bookingpatient[i][4]) + ' with ' + str(bookingpatient[i][5])
     return new_response_text
-
-
-
-
 
 screen = Tk()
 menu = StringVar()
