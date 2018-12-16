@@ -1,3 +1,11 @@
-ID,Name,HKID,Outstanding Bill,Doctor
-1,Chan Tai Man,A123456(3),1300,Dr. Ng Mei Lai
-2,Sheung Kin Hong,A654321(7),900,Dr. Ng Mei Lai
+ID,Name,HKID,Outstanding Bill
+1,Chan Tai Man,A123456,1300
+2,Sheung Kin Hong,A654321,900
+3,Meng Hui Ting,U553213,8100
+4,Liu Zi Xuan,R443212,400
+5,Cao Wan Ting,P590021,0
+6,Cui Ling Yi,Z814442,50
+7,She Chu Zhen,C194218,120
+8,Hui Shi Han,U688393,300
+9,Kong Jia Ying,C756625,200
+10,Zhong Yu Ru,S234887,100

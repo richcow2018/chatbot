@@ -52,7 +52,7 @@ for file in os.listdir('data/bill/'):
     bot.train(data)
 
 def command():
-    global answer    
+    global answer
     user_input, hkid = preprocess(input.get())
     #print(user_input)
     #print(hkid)
@@ -79,16 +79,22 @@ def preprocess(raw_input):
 
 def postprocess(response_text, hkid):
     new_response_text = response_text
+    bFoundItem = False
     if(response_text == 'QUERY'):
-    	if(current_action=='BILL'):
+        if(current_action=='BILL'):
             for i in range(len(billingpatient)):
-                    if hkid in billingpatient[i][2]:
-                        new_response_text = 'Hello, ' + billingpatient[i][1] + ', your outstanding bill : ' + str(billingpatient[i][3])
-    	elif(current_action=='APPOINTMENT'):
+                if hkid in billingpatient[i][2] and len(hkid) == 7:
+                    new_response_text = 'Hello, ' + billingpatient[i][1] + ', your outstanding bill : ' + str(billingpatient[i][3])
+                    bFoundItem = True
+        elif(current_action=='APPOINTMENT'):
             for i in range(len(bookingpatient)):
-                if hkid in bookingpatient[i][2]:
+                if hkid in bookingpatient[i][2] and len(hkid) == 7:
                     new_response_text = 'Hello, ' + bookingpatient[i][1] + ', your booking date is on ' + str(bookingpatient[i][3]) + ' at ' + str(bookingpatient[i][4]) + ' with ' + str(bookingpatient[i][5])
+                    bFoundItem = True
+        if not bFoundItem:
+            new_response_text = 'The identity number provided is invalid, please contact our staff for further information.'
     return new_response_text
+
 
 screen = Tk()
 menu = StringVar()
