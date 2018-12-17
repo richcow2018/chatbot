@@ -38,7 +38,7 @@ bot = ChatBot(
 
 
 current_action = ""
-
+current_step = ""
 #for files in os.listdir('data/english/'):
 #   data = open('data/english/' + files, 'r').readlines()
 #   bot.train(data)
@@ -63,7 +63,8 @@ def command():
 
 def preprocess(raw_input):
     global current_action
-    new_input = raw_input
+    global current_step
+    new_input = greeting(raw_input)
     hkid = ""
 
     if raw_input.find("My ID Number is") != -1:
@@ -71,11 +72,29 @@ def preprocess(raw_input):
         hkid = raw_input[16:]
     if raw_input.find("appointment today") != -1:
     	current_action = "SOPD"
+    	current_step = "SOPD_1"
     elif raw_input.find("appointment") != -1:
     	current_action = "APPOINTMENT"
     elif raw_input.find("bill") != -1:
     	current_action = "BILL"
+    if raw_input.find("regist") != -1:
+    	current_step = "SOPD_2"
+    elif raw_input.find("consultation") != -1:
+    	current_step = "SOPD_3"
     return new_input, hkid
+
+
+def greeting(raw_input):
+	new_input = raw_input
+	if(raw_input=='Hi'):
+		new_input = 'GREETING'
+	elif(raw_input=='Hello'):
+		new_input = 'GREETING'
+	elif(raw_input=='Hey'):
+		new_input = 'GREETING'
+	elif(raw_input=='Good Morning'):
+		new_input = 'GREETING'
+	return new_input
 
 def postprocess(response_text, hkid):
     new_response_text = response_text
@@ -90,9 +109,24 @@ def postprocess(response_text, hkid):
             for i in range(len(bookingpatient)):
                 if hkid in bookingpatient[i][2] and len(hkid) == 7:
                     new_response_text = 'Hello, ' + bookingpatient[i][1] + ', your booking date is on ' + str(bookingpatient[i][3]) + ' at ' + str(bookingpatient[i][4]) + ' with ' + str(bookingpatient[i][5])
-                    bFoundItem = True
+                    bFoundItem = True                    
         if not bFoundItem:
             new_response_text = 'The identity number provided is invalid, please contact our staff for further information.'
+    
+    if response_text.find('SOPD_')!=-1:
+    	if(response_text=='SOPD_1'):
+    		current_step='SOPD_1'
+    	elif(response_text=='SOPD_2'):
+    		current_step='SOPD_2'
+    	elif(response_text=='SOPD_3'):
+    		current_step='SOPD_3'
+
+    	if(current_step=='SOPD_1'):
+    		new_response_text = 'Please go to admission center to pay make the attendence first.'
+    	elif(current_step=='SOPD_2'):
+    		new_response_text = 'Please go to Ophthalmology Clinic for doctor consultation.'
+    	elif(current_step=='SOPD_3'):
+    		new_response_text = 'Please go to Pharmacy to take your medicine.'
     return new_response_text
 
 
