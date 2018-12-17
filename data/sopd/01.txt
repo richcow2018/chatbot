@@ -1,0 +1,19 @@
+GREETING
+Greeting, what can I do for you?
+I have an appointment today.
+SOPD_1
+I have registered already
+SOPD_2
+I have complete registration
+SOPD_2
+What's next?
+SOPD_NEXT
+Where should I go now?
+SOPD_NEXT
+I have had the consultation already
+SOPD_3
+I have talked with the doctor
+SOPD_3
+I just come back from the clinic
+SOPD_3
+

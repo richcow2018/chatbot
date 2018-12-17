@@ -1,0 +1,6 @@
+GREETING
+Greeting, what can I do for you?
+I want to check my appointment.
+Can I have your Identity number please?
+CHECK
+QUERY
