@@ -3,6 +3,7 @@ from tkinter import *
 import time
 import os
 import csv
+import re
 from chatterbot.trainers import ListTrainer
 from pprint import pprint
 
@@ -39,6 +40,8 @@ bot = ChatBot(
 
 current_action = ""
 current_step = ""
+pattern = re.compile('[a-z][0-9]{6}', re.IGNORECASE)
+
 #for files in os.listdir('data/english/'):
 #   data = open('data/english/' + files, 'r').readlines()
 #   bot.train(data)
@@ -67,6 +70,10 @@ def preprocess(raw_input):
     new_input = greeting(raw_input)
     hkid = ""
 
+    m = pattern.search(raw_input)
+    if m != None:
+        new_input = "CHECK"
+        hkid = m.group()
     if raw_input.find("My ID Number is") != -1:
         new_input = "CHECK"
         hkid = raw_input[16:]
